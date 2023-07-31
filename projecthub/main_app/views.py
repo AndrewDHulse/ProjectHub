@@ -15,6 +15,8 @@ def home(request):
 def about(request):
   return render(request, 'about.html')
 
+
+
 @login_required
 def projects_index(request):
   projects = Project.objects.filter(user=request.user)
@@ -30,7 +32,13 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
     form.instance.user = self.request.user
     return super().form_valid(form)
 
+class ProjectDelete(LoginRequiredMixin, DeleteView):
+  model = Project
+  success_url = '/projects'
 
+class ProjectUpdate(LoginRequiredMixin, UpdateView):
+  model = Project
+  fields = '__all__'
 
 def signup(request):
   error_message = ''
