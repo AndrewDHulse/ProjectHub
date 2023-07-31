@@ -12,6 +12,9 @@ from .models import Project
 def home(request):
   return render(request, 'home.html')
 
+def about(request):
+  return render(request, 'about.html')
+
 @login_required
 def projects_index(request):
   projects = Project.objects.filter(user=request.user)
