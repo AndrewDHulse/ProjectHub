@@ -2,10 +2,27 @@ from django.db import models
 from django.urls import reverse
 from datetime import date
 from django.contrib.auth.models import User
+# AbstractUser
 
 # Create your models here.
 
+
+
+
+# class CustomUser(AbstractUser):
+#     #fix profile_picture later
+#     profile_picture= models.ImageField()
     
+
+#     def __str__(self):
+#         return self.user_name
+
+class TeamMember(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE
+    )
+    role = models.CharField(max_length=20)
 
 class Project(models.Model):
     name = models.CharField(max_length=50)
@@ -13,7 +30,8 @@ class Project(models.Model):
     description = models.TextField(max_length=250)
     start_date = models.DateField()
     end_date = models.DateField() 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    team_members = models.ManyToManyField(TeamMember)
 
     def __str__(self):
         return self.name
