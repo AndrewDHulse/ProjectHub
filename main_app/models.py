@@ -18,6 +18,7 @@ from django.contrib.auth.models import User
 #         return self.user_name
 
 class TeamMember(models.Model):
+    all_users = User.objects.all()
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE
