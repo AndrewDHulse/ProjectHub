@@ -12,5 +12,12 @@
         </nav>
     </nav>
       
+  <div>
+    <form action="{% url 'add_task' project.id %}" method=POST>
+      {% csrf_token %}
+      {{task_form.as_table}}
+      <input type="submit" class="btn" value="submit">
+    </form>   
+  </div>
 
 {% endblock %}

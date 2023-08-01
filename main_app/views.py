@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import TaskForm
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
@@ -57,8 +58,17 @@ def signup(request):
 @login_required
 def projects_detail(request, project_id):
   project = Project.objects.get(id=project_id)
-
+  task_form = TaskForm()
   return render(request, 'projects/detail.html', {
-    'project': project
+    'project': project,
+    'task_form' : task_form,
   })
 
+@login_required
+def add_task(request, project_id):
+  form = TaskForm(request.POST)
+  if form.is_valid():
+    new_task = form.save(commit=False)
+    new_task.project_id = project_id
+    new_task.save()
+  return redirect('detail', project_id=project_id)
