@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Project Details</h1>
 
-    <div> 
-        <a href="{% url 'projects_update' project.id%}">Update</a>
-        <a href="{% url 'projects_delete' project.id%}">Delete</a>
-    </div>
 
 <h3>{{ project.name }}</h3>
+
+    <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
+        <div class="navbar-brand"> Tools </div>
+        <nav class="nav nav-pills flex-column">
+          <a class="nav-link" href=" {% url 'projects_update' project.id %} ">Update </a>
+          <a class="nav-link" href="{% url 'projects_delete' project.id %}">Delete</a>
+        </nav>
+    </nav>
+      
+
 {% endblock %}
