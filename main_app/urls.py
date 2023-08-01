@@ -11,6 +11,7 @@ urlpatterns = [
     path('projects/<int:project_id>/', views.projects_detail, name='detail'),
     path('projects/<int:pk>/update/', views.ProjectUpdate.as_view(), name='projects_update'),
     path('projects/<int:pk>/delete/', views.ProjectDelete.as_view(), name='projects_delete'),
-    
     path('projects/<int:project_id>/add_task/', views.add_task, name='add_task'),
+    path('projects/<int:project_id>/assoc_member/<int:team_member_id>/',views.assoc_member, name='assoc_member'),
+    path('projects/<int:project_id>/unassoc_member/<int:team_member_id>/',views.unassoc_member, name='unassoc_member'),
 ]

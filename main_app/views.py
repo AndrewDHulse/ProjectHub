@@ -7,7 +7,7 @@ from .forms import TaskForm
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from .models import Project
+from .models import Project, TeamMember
 # Create your views here.
 
 def home(request):
@@ -20,7 +20,7 @@ def about(request):
 
 @login_required
 def projects_index(request):
-  projects = Project.objects.filter(user=request.user)
+  projects = Project.objects.filter(created_by=request.user)
   return render(request, 'projects/index.html', {
     'projects': projects
   })
@@ -58,10 +58,13 @@ def signup(request):
 @login_required
 def projects_detail(request, project_id):
   project = Project.objects.get(id=project_id)
+  id_list = project.team_members.all().values_list('id')
+  members_not_in_team = TeamMember.objects.exclude(id__in=id_list)
   task_form = TaskForm()
   return render(request, 'projects/detail.html', {
     'project': project,
     'task_form' : task_form,
+    'team_members' : members_not_in_team
   })
 
 @login_required
@@ -71,4 +74,14 @@ def add_task(request, project_id):
     new_task = form.save(commit=False)
     new_task.project_id = project_id
     new_task.save()
+  return redirect('detail', project_id=project_id)
+
+@login_required
+def assoc_member(request, project_id, team_member_id):
+  Project.objects.get(id=project_id).team_members.add(team_member_id)
+  return redirect('detail', project_id=project_id)
+
+@login_required
+def unassoc_member(request, project_id, team_member_id):
+  Project.objects.get(id=project_id).team_members.remove(team_member_id)
   return redirect('detail', project_id=project_id)
