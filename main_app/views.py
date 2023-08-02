@@ -3,12 +3,12 @@ import boto3
 import os
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import TaskForm
-
+from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from .models import Project, TeamMember, Photo
@@ -53,7 +53,7 @@ def signup(request):
     if form.is_valid():
       user = form.save()
       login(request, user)
-      return redirect('home')
+      return redirect('index')
     else:
         error_message = 'Invalid sign up - try again!'
   form = UserCreationForm()
@@ -118,4 +118,20 @@ def add_photo(request, project_id):
             print(e)
     return redirect('detail', project_id=project_id)
 
-
+def user_login(request):
+    error_message = ''
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')  
+            else:
+                error_message = 'Invalid login - try again'
+    else:
+        form = AuthenticationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'user_login.html', context) 
