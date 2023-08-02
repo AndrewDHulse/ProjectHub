@@ -1,3 +1,7 @@
+import uuid
+import boto3
+import os
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
@@ -7,7 +11,8 @@ from .forms import TaskForm
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from .models import Project, TeamMember
+from .models import Project, TeamMember, Photo
+
 # Create your views here.
 
 def home(request):
@@ -89,3 +94,28 @@ def assoc_member(request, project_id, team_member_id):
 def unassoc_member(request, project_id, team_member_id):
   Project.objects.get(id=project_id).team_members.remove(team_member_id)
   return redirect('detail', project_id=project_id)
+
+@login_required
+def add_photo(request, project_id):
+    # photo-file will be the "name" attribute on the <input type="file">
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')
+        # need a unique "key" for S3 / needs image file extension too
+        # It needs to keep the same file extension of
+        # the file that was uploaded (.png, .jpeg, etc..)
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        # just in case something goes wrong
+        try:
+            bucket = os.environ['S3_BUCKET']
+            s3.upload_fileobj(photo_file, bucket, key)
+            # build the full url string
+            url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+            # we can assign to cat_id or cat (if you have a cat object)
+            Photo.objects.create(url=url, project_id=project_id)
+        except Exception as e:
+            print('An error occurred uploading file to S3')
+            print(e)
+    return redirect('detail', project_id=project_id)
+
+
