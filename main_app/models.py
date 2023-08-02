@@ -45,7 +45,7 @@ class Project(models.Model):
 # by using through up above we are effictively able to use users twice
 class TeamMember(models.Model):
     #use related_name=to avoid the errors we've been given
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='team_member')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_member')
     project= models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
