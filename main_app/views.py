@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import TaskForm
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
+from django.contrib.auth.models import User
 from .models import Project, TeamMember
 # Create your views here.
 
@@ -27,10 +27,10 @@ def projects_index(request):
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
-  fields = '__all__'
+  fields = ['name', 'description', 'start_date', 'end_date']
 
   def form_valid(self, form):
-    form.instance.user = self.request.user
+    form.instance.created_by = self.request.user
     return super().form_valid(form)
 
 class ProjectDelete(LoginRequiredMixin, DeleteView):
@@ -57,15 +57,19 @@ def signup(request):
 
 @login_required
 def projects_detail(request, project_id):
-  project = Project.objects.get(id=project_id)
-  id_list = project.team_members.all().values_list('id')
-  members_not_in_team = TeamMember.objects.exclude(id__in=id_list)
-  task_form = TaskForm()
-  return render(request, 'projects/detail.html', {
-    'project': project,
-    'task_form' : task_form,
-    'team_members' : members_not_in_team
-  })
+    project = Project.objects.get(id=project_id)
+    #grabbed users here
+    all_users = User.objects.all()
+    # check team members here
+    team_members_id = project.team_members.all()
+    # filter team members from all users
+    members_not_in_team = all_users.exclude(id__in=team_members_id)
+    task_form = TaskForm()
+    return render(request, 'projects/detail.html', {
+        'project': project,
+        'task_form': task_form,
+        'members_not_in_team': members_not_in_team,
+    })
 
 @login_required
 def add_task(request, project_id):
