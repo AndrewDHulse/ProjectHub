@@ -34,6 +34,13 @@ class Project(models.Model):
     
     def get_absolute_url(self):
         return reverse('detail', kwargs={'project_id': self.id})
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super(Project, self).save(*args, **kwargs)
+            TeamMember.objects.create(project=self, user=self.created_by)
+        else:
+            super(Project, self).save(*args, **kwargs)
 
 
 #we did it!
