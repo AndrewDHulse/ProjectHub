@@ -1,16 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Project List</h1>
+{%if projects.count%}
+  <h1>Project List</h1>
+    {% for project in projects %}
 
-{% for project in projects %}
-
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title"><a href= {% url 'detail' project.id %}>{{project.name}}</a></h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{project.created_by}}</h6>
-        </div>
-      </div>
-{% endfor %}
-
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title"><a href= {% url 'detail' project.id %}>{{project.name}}</a></h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{project.created_by}}</h6>
+            </div>
+          </div>
+    {% endfor %}
+  {%else%}
+    <p>
+      Looks like you have no projects! 
+      <br>
+      <a href="{% url 'projects_create' %}">Create a project</a> to begin!
+    </p>
+{%endif%}
 {% endblock %}
