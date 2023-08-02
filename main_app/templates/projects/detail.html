@@ -3,6 +3,15 @@
 
 <div class="text-center">
   <h3>{{ project.name }}</h3>
+  <p>Description: {{ project.description }} </p>
+  <p>Start: {{ project.start_date }} </p>
+  <p>Due Date: {{ project.end_date }} </p>
+  <p>Project Manager: {{ project.created_by }} </p>
+  {% if project.team_members.all %}
+  <p>Team: {{ project.team_members.all }} </p>
+  {% else %}
+  <p>Team: No other team members </p>
+  {% endif %}
 </div>
 {% comment %} sidebar {% endcomment %}
 <div class="row">
