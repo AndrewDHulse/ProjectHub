@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3>{{ project.name }}</h3>
+<div class="text-center">
+  <h3>{{ project.name }}</h3>
+</div>
 {% comment %} sidebar {% endcomment %}
 <div class="row">
   <div class="col-md-3">
-    <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
+    <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3 shadow-lg">
       <div class="navbar-brand"> Tools </div>
       <nav class="nav nav-pills flex-column">
         <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
