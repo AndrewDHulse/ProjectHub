@@ -60,7 +60,7 @@ class Task(models.Model):
         Project,
         on_delete=models.CASCADE
     )
-
+    assigned_to = models.ForeignKey(TeamMember, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return f"{self.name} is a task for {self.project} due on {self.due_date}"
     
