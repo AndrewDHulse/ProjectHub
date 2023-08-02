@@ -26,17 +26,40 @@
 Remember to render tasks on screen. add code for that
 {% endcomment %}
 
-{% for member in project.team_members.all %}
-  <div>
-    {{team_member.user}}
+{% comment %}
+remember to add the unassoc code
+{% endcomment %}
+<h4>Team Members</h4>
+{% if project.team_members.all %}
+<div>
+    <ul>
+        {% for member in project.team_members.all %}
+        <li>{{ member.username }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+<p>No team members assigned to this project.</p>
+{% endif %}
 
-      <form action="{% url 'assoc_member' project.id team_member.id %}" method= "POST">
-        {% csrf_token %}
-        <button type="submit" class="btn">add</button>
-      </form>
-  </div>
-{%endfor%}
-
+<h4>Add Team Members</h4>
+{% if members_not_in_team %}
+<div>
+    <ul>
+        {% for team_member in members_not_in_team %}
+        <li>
+            {{ team_member.username }}
+            <form action="{% url 'assoc_member' project.id team_member.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn">Add</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% else %}
+<p>No available team members to add to this project.</p>
+{% endif %}
 
 
 
