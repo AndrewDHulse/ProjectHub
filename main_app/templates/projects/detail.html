@@ -1,66 +1,122 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <h3>{{ project.name }}</h3>
-
-    <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
-        <div class="navbar-brand"> Tools </div>
-        <nav class="nav nav-pills flex-column">
-          <a class="nav-link" href=" {% url 'projects_update' project.id %} ">Update </a>
-          <a class="nav-link" href="{% url 'projects_delete' project.id %}">Delete</a>
-        </nav>
+{% comment %} sidebar {% endcomment %}
+<div class="row">
+  <div class="col-md-3">
+    <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3">
+      <div class="navbar-brand"> Tools </div>
+      <nav class="nav nav-pills flex-column">
+        <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
+        <a class="btn btn-primary mb-2" href="{% url 'projects_delete' project.id %}">Delete</a>
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#memberModal">
+          View or remove members
+        </button>
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#nonMemberModal">
+          Add Members
+        </button>
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+          Add Task
+        </button>
+      </nav>
     </nav>
-
-    
-  {% comment %} add this to modal later {% endcomment %}
-  <div>
-    <form action="{% url 'add_task' project.id %}" method=POST>
-      {% csrf_token %}
-      {{task_form.as_table}}
-      <input type="submit" class="btn" value="submit">
-    </form>   
-  </div>
- {% comment %} end note {% endcomment %}
-{%comment %} 
-Remember to render tasks on screen. add code for that
-{% endcomment %}
-
-{% comment %}
-remember to add the unassoc code
-{% endcomment %}
-<h4>Team Members</h4>
-{% if project.team_members.all %}
-<div>
-    <ul>
-        {% for member in project.team_members.all %}
-        <li>{{ member.username }}</li>
-        {% endfor %}
-    </ul>
 </div>
-{% else %}
-<p>No team members assigned to this project.</p>
-{% endif %}
+</div>
+{% comment %} end sidebar {% endcomment %}
 
-<h4>Add Team Members</h4>
-{% if members_not_in_team %}
-<div>
-    <ul>
-        {% for team_member in members_not_in_team %}
-        <li>
-            {{ team_member.username }}
-            <form action="{% url 'assoc_member' project.id team_member.id %}" method="POST">
+<div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="memberModalLabel">TEAM MEMBERS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% if project.team_members.all %}
+        <div>
+          <ul>
+            {% for member in project.team_members.all %}
+            <li>
+              {{ member.username }}
+              <form action="{% url 'unassoc_member' project.id member.id %}" method='POST'>
                 {% csrf_token %}
-                <button type="submit" class="btn">Add</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
+                <button type="submit" class="btn btn-primary">Remove</button>
+              </form>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% else %}
+        <p>No team members assigned to this project.</p>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
-{% else %}
-<p>No available team members to add to this project.</p>
-{% endif %}
 
+<div class="modal fade" id="nonMemberModal" tabindex="-1" aria-labelledby="nonMemberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="nonMemberModalLabel">ADD MEMBERS</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% if members_not_in_team %}
+        <div>
+          <ul>
+            {% for team_member in members_not_in_team %}
+            <li>
+              {{ team_member.username }}
+              <form action="{% url 'assoc_member' project.id team_member.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% else %}
+        <p>No available team members to add to this project.</p>
+        {% endif %}        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="AddTaskModalLabel">Add Task</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <form action="{% url 'add_task' project.id %}" method="POST">
+            {% csrf_token %}
+            {{task_form.as_p}}
+            <input type="submit" class="btn btn-primary" value="submit">
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+{% comment %} remember to add code to render all tasks {% endcomment %}
+
+<div class="col-md-9">
+  {% comment %} body here {% endcomment %}
+</div>
 {% endblock %}
