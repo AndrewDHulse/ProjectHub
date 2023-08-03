@@ -4,45 +4,44 @@
 {% comment %} sidebar {% endcomment %}
 <div class="row">
   <div class="sidebar-container">
-  <div class="col-md-3">
-            <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3 shadow-lg">
-              <div class="navbar-brand"> Tools </div>
-              <nav class="nav nav-pills flex-column">
-                <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
-                <a class="btn btn-primary mb-2" href="{% url 'projects_delete' project.id %}">Delete</a>
-                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                data-bs-target="#memberModal">
-                        View or remove members
-                    </button>
-                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                    data-bs-target="#nonMemberModal">
-                    Add Members
-                  </button>
-                  <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                  data-bs-target="#addTaskModal">
-                  Add Task
-                </button>
-                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                data-bs-target="#addPhotoModal">
-                Add Photo
-              </button>
-                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-                data-bs-target="#allTaskModal">
-                View Tasks
-              </button>
-            </nav>
-            </nav>
-          </div>
-        </div>
-<div class="container">
-          {% comment %} end sidebar {% endcomment %}
-      
-      <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="memberModalLabel">TEAM MEMBERS</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="col-md-3">
+      <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3 shadow-lg">
+        <div class="navbar-brand"> Tools </div>
+        <nav class="nav nav-pills flex-column">
+          <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
+          <a class="btn btn-primary mb-2" href="{% url 'projects_delete' project.id %}">Delete</a>
+          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+          data-bs-target="#memberModal">
+            View or remove members
+          </button>
+          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+          data-bs-target="#nonMemberModal">
+            Add Members
+          </button>
+          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+          data-bs-target="#addTaskModal">
+            Add Task
+          </button>
+          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+          data-bs-target="#addPhotoModal">
+            Add Photo
+          </button>
+          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+          data-bs-target="#allTaskModal">
+            View Tasks
+          </button>
+        </nav>
+      </nav>
+    </div>
+  </div>
+  {% comment %} end sidebar {% endcomment %}
+  <div class="container">      
+    <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="memberModalLabel">TEAM MEMBERS</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             {% if project.team_members.all %}
@@ -130,6 +129,7 @@
         </div>
       </div>
     </div>
+
     <div class="modal fade" id="allTaskModal" tabindex="-1" aria-labelledby="allTaskModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -139,11 +139,11 @@
           </div>
           <div class="modal-body">
             {% if tasks %}
-              <ul>
-                {% for task in tasks %}
-                  <li>{{ task.name }} - {{ task.description }} - Due Date: {{ task.due_date }}</li>
-                {% endfor %}
-              </ul>
+            <ul>
+              {% for task in tasks %}
+              <li>{{ task.name }} - {{ task.description }} - Due Date: {{ task.due_date }}</li>
+              {% endfor %}
+            </ul>
             {% else %}
               <p>No tasks for this project.</p>
             {% endif %}
@@ -155,7 +155,7 @@
       </div>
     </div>
 
-    <!-- Photo Section begins here -->
+    <!-- Photo Section BEGINS here -->
     <div class="modal fade" id="addPhotoModal" tabindex="-1" aria-labelledby="addPhotoModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -184,31 +184,31 @@
         </div>
       </div>
     </div>
-    <!-- Photo section ends here  -->
+    <!-- Photo section ENDS  -->
 
     <div class="col-md-9">
       <div class="card-center">
         <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">{{ project.name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Project Manager: {{ project.created_by }}</h6>
-                <p class="card-text">{{ project.description }}</p>
-                {% if project.team_members.all %}
-                    <h6 class="card-text text-center mb-2"> --Team-- </h6>
-                    <ul class="list-group list-group-flush">
-                        {% for member in project.team_members.all %}
-                            <li class="list-group-item">{{ member.username }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-                <div class="card-footer text-muted">
-                    {{ project.start_date }} -- {{ project.end_date }}
-                </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ project.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Project Manager: {{ project.created_by }}</h6>
+            <p class="card-text">{{ project.description }}</p>
+            {% if project.team_members.all %}
+            <h6 class="card-text text-center mb-2"> --Team-- </h6>
+            <ul class="list-group list-group-flush">
+              {% for member in project.team_members.all %}
+              <li class="list-group-item">{{ member.username }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="card-footer text-muted">
+              {{ project.start_date }} -- {{ project.end_date }}
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-</div>
+  </div>
 </div>
 
 {% endblock %}
