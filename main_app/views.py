@@ -153,7 +153,6 @@ def user_profile(request):
           form.save()
           return redirect('user_profile')
     else:
-        # form = UserProfileForm(instance=user_profile)
         error_message = 'Ugh Oh, something went wrong!'
     
     form = UserProfileForm()
