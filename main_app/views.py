@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import TaskForm
+from .forms import TaskForm, ProjectForm
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
@@ -30,9 +30,18 @@ def projects_index(request):
     'projects': projects
   })
 
+# class ProjectCreate(LoginRequiredMixin, CreateView):
+#   model = Project
+#   fields = ['name', 'description', 'start_date', 'end_date']
+
+#   def form_valid(self, form):
+#     form.instance.created_by = self.request.user
+#     return super().form_valid(form)
+
 class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
-  fields = ['name', 'description', 'start_date', 'end_date']
+  form_class = ProjectForm
+  template_name = 'main_app/project_form.html'
 
   def form_valid(self, form):
     form.instance.created_by = self.request.user
