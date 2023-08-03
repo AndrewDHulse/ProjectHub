@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import environ
+import os
 
 environ.Env()
 environ.Env.read_env()
@@ -25,10 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7zh!l$kkj1hz*lm!c$k08^7s=w#mv1fwv0&-jxets5m3dbt*kw'
+SECRET_KEY = os.environ['SECRET_KEY']
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ['MODE'] == 'dev' else False
+
 
 ALLOWED_HOSTS = []
 
@@ -84,11 +87,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'neondb',
         'USER' : 'theandrewhulse',
-        'PASSWORD' : '1vhCbF6kwzWx',
+        'PASSWORD' : os.environ['DB_PASSWORD'],
         'HOST' : 'ep-white-pine-01812551.us-east-2.aws.neon.tech'
     }
 }
-# postgres://theandrewhulse:1vhCbF6kwzWx@ep-white-pine-01812551.us-east-2.aws.neon.tech/neondb
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
