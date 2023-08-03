@@ -7,11 +7,11 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import TaskForm, ProjectForm
+from .forms import TaskForm, ProjectForm, UserProfileForm
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from .models import Project, TeamMember, Photo, Task
+from .models import Project, TeamMember, Photo, Task, UserProfile
 
 def home(request):
   return render(request, 'home.html')
@@ -141,4 +141,21 @@ def user_login(request):
     else:
         form = AuthenticationForm()
     context = {'form': form, 'error_message': error_message}
-    return render(request, 'user_login.html', context) 
+    return render(request, 'user_login.html', context)
+
+@login_required
+def user_profile(request):
+    error_message = ''
+    user_profile = UserProfile.objects.get_or_create(user=request.user)[0]
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+          form.save()
+          return redirect('user_profile')
+    else:
+        # form = UserProfileForm(instance=user_profile)
+        error_message = 'Ugh Oh, something went wrong!'
+    
+    form = UserProfileForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'user_profile.html', context)
