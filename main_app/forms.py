@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Task, Project
+from .models import Task, Project, UserProfile
 
 class TaskForm(ModelForm):
     class Meta:
@@ -22,3 +22,7 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = ['name', 'description', 'start_date', 'end_date']
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = [ 'profile_picture', 'bio']
