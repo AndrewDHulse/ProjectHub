@@ -11,17 +11,13 @@ from .forms import TaskForm, ProjectForm
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from .models import Project, TeamMember, Photo
-
-# Create your views here.
+from .models import Project, TeamMember, Photo, Task
 
 def home(request):
   return render(request, 'home.html')
 
 def about(request):
   return render(request, 'about.html')
-
-
 
 @login_required
 def projects_index(request):
@@ -79,10 +75,12 @@ def projects_detail(request, project_id):
     # filter team members from all users
     members_not_in_team = all_users.exclude(id__in=team_members_id)
     task_form = TaskForm()
+    tasks= Task.objects.filter(project_id=project_id)
     return render(request, 'projects/detail.html', {
         'project': project,
         'task_form': task_form,
         'members_not_in_team': members_not_in_team,
+        'tasks' : tasks,
     })
 
 @login_required

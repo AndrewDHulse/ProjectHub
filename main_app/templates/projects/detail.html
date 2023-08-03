@@ -1,166 +1,214 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="text-center">
-  <h3>{{ project.name }}</h3>
-  <p>Description: {{ project.description }} </p>
-  <p>Start: {{ project.start_date }} </p>
-  <p>Due Date: {{ project.end_date }} </p>
-  <p>Project Manager: {{ project.created_by }} </p>
-  {% if project.team_members.all %}
-  <p>Team: {{ project.team_members.all }} </p>
-  {% else %}
-  <p>Team: No other team members </p>
-  {% endif %}
-</div>
 {% comment %} sidebar {% endcomment %}
 <div class="row">
+  <div class="sidebar-container">
   <div class="col-md-3">
-    <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3 shadow-lg">
-      <div class="navbar-brand"> Tools </div>
-      <nav class="nav nav-pills flex-column">
-        <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
-        <a class="btn btn-primary mb-2" href="{% url 'projects_delete' project.id %}">Delete</a>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#memberModal">
-          View or remove members
-        </button>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#nonMemberModal">
-          Add Members
-        </button>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-          Add Task
-        </button>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addPhotoModal">
-          Add Photo
-        </button>
-      </nav>
-    </nav>
-</div>
-</div>
-{% comment %} end sidebar {% endcomment %}
-
-<div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="memberModalLabel">TEAM MEMBERS</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3 shadow-lg">
+              <div class="navbar-brand"> Tools </div>
+              <nav class="nav nav-pills flex-column">
+                <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
+                <a class="btn btn-primary mb-2" href="{% url 'projects_delete' project.id %}">Delete</a>
+                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                data-bs-target="#memberModal">
+                        View or remove members
+                    </button>
+                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                    data-bs-target="#nonMemberModal">
+                    Add Members
+                  </button>
+                  <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                  data-bs-target="#addTaskModal">
+                  Add Task
+                </button>
+                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                data-bs-target="#addPhotoModal">
+                Add Photo
+              </button>
+                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                data-bs-target="#allTaskModal">
+                View Tasks
+              </button>
+            </nav>
+            </nav>
+          </div>
+        </div>
+<div class="container">
+          {% comment %} end sidebar {% endcomment %}
+      
+      <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="memberModalLabel">TEAM MEMBERS</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% if project.team_members.all %}
+            <div>
+              <ul>
+                {% for member in project.team_members.all %}
+                <li>
+                  {{ member.username }}
+                  <form action="{% url 'unassoc_member' project.id member.id %}" method='POST'>
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Remove</button>
+                  </form>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+            <p>No team members assigned to this project.</p>
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        {% if project.team_members.all %}
-        <div>
-          <ul>
-            {% for member in project.team_members.all %}
-            <li>
-              {{ member.username }}
-              <form action="{% url 'unassoc_member' project.id member.id %}" method='POST'>
+    </div>
+
+    <div class="modal fade" id="nonMemberModal" tabindex="-1" aria-labelledby="nonMemberModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="nonMemberModalLabel">ADD MEMBERS</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% if members_not_in_team %}
+            <div>
+              <ul>
+                {% for team_member in members_not_in_team %}
+                <li>
+                  {{ team_member.username }}
+                  <form action="{% url 'assoc_member' project.id team_member.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </form>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+            <p>No available team members to add to this project.</p>
+            {% endif %}        
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="AddTaskModalLabel">Add Task</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="taskForm">
+              <form action="{% url 'add_task' project.id %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Remove</button>
+                {{task_form.name.label_tag}}: {{task_form.name}}
+                <br>
+                {{task_form.description.label_tag}}: {{task_form.description}}
+                <br>
+                {{task_form.due_date.label_tag}}: {{task_form.due_date}}
+                <br>
+                <input type="submit" class="btn btn-primary" value="submit">
               </form>
-            </li>
-            {% endfor %}
-          </ul>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
         </div>
-        {% else %}
-        <p>No team members assigned to this project.</p>
-        {% endif %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="modal fade" id="nonMemberModal" tabindex="-1" aria-labelledby="nonMemberModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="nonMemberModalLabel">ADD MEMBERS</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="allTaskModal" tabindex="-1" aria-labelledby="allTaskModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="AllTaskModalLabel">All Tasks</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% if tasks %}
+              <ul>
+                {% for task in tasks %}
+                  <li>{{ task.name }} - {{ task.description }} - Due Date: {{ task.due_date }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>No tasks for this project.</p>
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        {% if members_not_in_team %}
-        <div>
-          <ul>
-            {% for team_member in members_not_in_team %}
-            <li>
-              {{ team_member.username }}
-              <form action="{% url 'assoc_member' project.id team_member.id %}" method="POST">
+    </div>
+
+    <!-- Photo Section begins here -->
+    <div class="modal fade" id="addPhotoModal" tabindex="-1" aria-labelledby="addPhotoModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addPhotoModalLabel">Project Photos</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              {% for photo in project.photo_set.all %}
+              <img class="responsive-img card-panel" src="{{photo.url}}">
+              {% empty %}
+              <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+              {% endfor %}
+              <form action="{% url 'add_photo' project.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Add</button>
+                <input type="file" name="photo-file">
+                <br><br>
+                <button type="submit" class="btn btn-primary">Upload Photo</button>
               </form>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% else %}
-        <p>No available team members to add to this project.</p>
-        {% endif %}        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="AddTaskModalLabel">Add Task</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div>
-          <form action="{% url 'add_task' project.id %}" method="POST">
-            {% csrf_token %}
-            {{task_form.as_p}}
-            <input type="submit" class="btn btn-primary" value="submit">
-          </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
-</div>
+    <!-- Photo section ends here  -->
 
-{% comment %} remember to add code to render all tasks {% endcomment %}
-<!-- Photo Section begins here -->
-<div class="modal fade" id="addPhotoModal" tabindex="-1" aria-labelledby="addPhotoModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addPhotoModalLabel">Project Photos</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div>
-          {% for photo in project.photo_set.all %}
-          <img class="responsive-img card-panel" src="{{photo.url}}">
-          {% empty %}
-          <div class="card-panel teal-text center-align">No Photos Uploaded</div>
-          {% endfor %}
-          <form action="{% url 'add_photo' project.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
-            {% csrf_token %}
-            <input type="file" name="photo-file">
-            <br><br>
-            <button type="submit" class="btn btn-primary">Upload Photo</button>
-          </form>
+    <div class="col-md-9">
+      <div class="card-center">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{ project.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Project Manager: {{ project.created_by }}</h6>
+                <p class="card-text">{{ project.description }}</p>
+                {% if project.team_members.all %}
+                    <h6 class="card-text text-center mb-2"> --Team-- </h6>
+                    <ul class="list-group list-group-flush">
+                        {% for member in project.team_members.all %}
+                            <li class="list-group-item">{{ member.username }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="card-footer text-muted">
+                    {{ project.start_date }} -- {{ project.end_date }}
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
 </div>
-<!-- Photo section ends here  -->
+</div>
+</div>
 
-<div class="col-md-9">
-  {% comment %} body here {% endcomment %}
-</div>
 {% endblock %}
