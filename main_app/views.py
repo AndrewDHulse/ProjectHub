@@ -13,15 +13,11 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from .models import Project, TeamMember, Photo, Task
 
-# Create your views here.
-
 def home(request):
   return render(request, 'home.html')
 
 def about(request):
   return render(request, 'about.html')
-
-
 
 @login_required
 def projects_index(request):
