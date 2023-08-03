@@ -82,10 +82,13 @@ WSGI_APPLICATION = 'projecthub.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'projecthub',
+        'NAME': 'neondb',
+        'USER' : 'theandrewhulse',
+        'PASSWORD' : '1vhCbF6kwzWx',
+        'HOST' : 'ep-white-pine-01812551.us-east-2.aws.neon.tech'
     }
 }
-
+# postgres://theandrewhulse:1vhCbF6kwzWx@ep-white-pine-01812551.us-east-2.aws.neon.tech/neondb
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -133,3 +136,6 @@ LOGOUT_REDIRECT_URL='/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import django_on_heroku
+django_on_heroku.settings(locals())
