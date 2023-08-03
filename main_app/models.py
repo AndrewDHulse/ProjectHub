@@ -3,6 +3,7 @@ from django.urls import reverse
 from datetime import date
 from django.contrib.auth.models import User
 # AbstractUser
+from django.core import validators
 
 # Create your models here.
 
@@ -83,6 +84,10 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture= models.ImageField(null=True, blank=True)
     bio = models.TextField(max_length=200)
-
+    
+    first_name = models.CharField(('first name'), max_length=150, blank=True)
+    last_name = models.CharField(('last name'), max_length=150, blank=True)
+    email = models.EmailField(('email address'), blank=True)
+    
     def __str__(self):
         return self.user.username
