@@ -21,7 +21,7 @@ def about(request):
 
 @login_required
 def projects_index(request):
-  projects = Project.objects.filter(created_by=request.user)
+  projects = Project.objects.filter(team_members=request.user)
   return render(request, 'projects/index.html', {
     'projects': projects
   })
