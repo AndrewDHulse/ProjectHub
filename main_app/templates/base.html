@@ -25,20 +25,26 @@
                           <li class="nav-item">
                             <a class="nav-link" href="{% url 'about' %}">About</a>
                           </li>
+                        {%if not user.is_authenticated %}
                           <li class="nav-item">
                             <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
                           </li>
                           <li class="nav-item">
                             <a class="nav-link" href="{% url 'user_login' %}">Log in</a>
                           </li>
-                          <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Projects
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                              <li><a class="dropdown-item" href="{% url 'index' %}">View All</a></li>
-                              <li><a class="dropdown-item" href="{% url 'projects_create' %}">Create</a></li>
-                            </ul>
+                        {% else %}
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Projects
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                            <li><a class="dropdown-item" href="{% url 'index' %}">View All</a></li>
+                            <li><a class="dropdown-item" href="{% url 'projects_create' %}">Create</a></li>
+                          </ul>
+                          <li class="nav-item ml-auto">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                          </li>
+                        {% endif %}
                           </li>
                         </ul>
                       </div>
