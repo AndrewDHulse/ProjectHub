@@ -6,8 +6,19 @@
       <h2><span>{{ request.user.username }}</span>'s Profile</h2>
       <!-- Display user info below -->
       <div class="mb-4">
+        {% for photo in user_profile.profilephoto_set.all %}
+        <img src="{{profilephoto.url}}" alt="Profile Picture">
+        {% empty %}
+        <div>No Profile Picture</div>
+        {% endfor %}
         <p><strong>Name:</strong> {{ user_profile.first_name }} {{ user_profile.last_name }}</p>
         <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+        <form action="{% url 'add_user_photo' user.id %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <input type="file" name="photo-file">
+            <br>
+            <button type="submit" class="btn">Upload User Photo</button>
+        </form>
       </div>
     </div>
     <div class="col-md-6">
