@@ -175,5 +175,6 @@ def user_profile(request):
     else:
         form = UserProfileForm()
     
-    context = {'form': form, 'error_message': error_message}
+    context = {'form': form, 'error_message': error_message, 'user_profile': user_profile}
+    print(f"this is user profile: {type(user_profile)}")
     return render(request, 'user_profile.html', context)

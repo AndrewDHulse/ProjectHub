@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>User Profile</h2>
-<!-- Display user info below -->
-<div>
-    <p> User: {{ request.user.username }} </p>
-    <p> Bio: {{ request.user.bio }} </p>
-    <!-- <p> Profile Pic: {{ request.user.profile_picture }} </p> -->
-    <p> First: {{ request.user.first_name }} </p>
-    <p> Last: {{ request.user.last_name }} </p>
-
-</div>
-<div>
-    <h3>Edit Profile</h3>
-    <form method="post" enctype="multipart/form-data">
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-6">
+      <h2><span>{{ request.user.username }}</span>'s Profile</h2>
+      <!-- Display user info below -->
+      <div class="mb-4">
+        <p><strong>Name:</strong> {{ user_profile.first_name }} {{ user_profile.last_name }}</p>
+        <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h3>Edit Profile</h3>
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}    
-        <button type ="submit" class="btn">Save Changes</button>
-    </form>
-    <!--  <p>{{ error_message }}</p> -->
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary float-end">Save Changes</button>
+      </form>
+    </div>
+  </div>
 </div>
-
 {% endblock %}
