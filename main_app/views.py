@@ -181,7 +181,7 @@ def user_profile(request):
     error_message = ''
     user_profile = UserProfile.objects.get_or_create(user=request.user)[0]
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user_profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
             return redirect('user_profile')
@@ -191,7 +191,7 @@ def user_profile(request):
         form = UserProfileForm()
     
     context = {'form': form, 'error_message': error_message, 'user_profile': user_profile}
-    print(f"this is user profile: {type(user_profile)}")
+    print(f"this is user profile: {user_profile}")
     return render(request, 'user_profile.html', context)
 
 @login_required
