@@ -1,17 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% if object %}
-    <h1>edit {{object.name}}</h1>
-{% else %}
-    <h1>create project</h1>
-{% endif %}
-
-<form action="" method="POST">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-    <input type="submit" value="Submit!" class="btn">
-</form>
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-12">
+      {% if object %}
+        <h1>Edit {{ object.name }}</h1>
+      {% else %}
+        <h1>Create Project</h1>
+      {% endif %}
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
+          {{ form.name }}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+          <br>
+          {{ form.description }}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.start_date.id_for_label }}" class="form-label">Start Date</label>
+          {{ form.start_date }}
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.end_date.id_for_label }}" class="form-label">End Date</label>
+          {{ form.end_date }}
+        </div>
+        <!-- Add more form fields as needed -->
+        <button type="submit" class="btn btn-primary">Submit!</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

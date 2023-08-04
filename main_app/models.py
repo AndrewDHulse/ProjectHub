@@ -98,3 +98,4 @@ class ProfilePhoto(models.Model):
 
     def __str__(self):
         return f"Photo for user_id: {self.user_id} @{self.url}"
+
