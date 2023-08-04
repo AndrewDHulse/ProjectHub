@@ -43,7 +43,13 @@ class Project(models.Model):
         else:
             super(Project, self).save(*args, **kwargs)
 
+class ProjectNote(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    note = models.TextField(max_length=150)
 
+    def __str__(self):
+        return f"{self.note} is a note for {self.project}"
+    
 #we did it!
 
 

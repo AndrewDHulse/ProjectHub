@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Task, Project, UserProfile
+from .models import Task, Project, UserProfile, ProjectNote
 
 class TaskForm(ModelForm):
     class Meta:
@@ -26,3 +26,9 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = '__all__'
+
+class ProjectNoteForm(forms.ModelForm):
+    class Meta:
+        model = ProjectNote
+        fields = ['note']
+
