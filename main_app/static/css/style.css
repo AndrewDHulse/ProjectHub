@@ -19,8 +19,9 @@
 }
 
 .card {
-  margin: auto;
+  margin: 0 auto;
 }
+
 
 .sidebar-container {
   position: relative;
@@ -31,3 +32,24 @@
 .btn-primary{
   background-color: gray;
 }
+
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 40px; 
+  height: 40px; 
+  background-color: #1d1919; 
+  border-radius: 50%; 
+  border: none; 
+  margin: 5px;
+}
+
+
+
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background-color: #ccc; 
+
+}
+

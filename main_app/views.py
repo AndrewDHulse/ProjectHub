@@ -7,11 +7,11 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import TaskForm, ProjectForm, UserProfileForm
+from .forms import TaskForm, ProjectForm, UserProfileForm, ProjectNoteForm
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from .models import Project, TeamMember, Photo, Task, UserProfile, ProfilePhoto
+from .models import Project, TeamMember, Photo, Task, UserProfile, ProfilePhoto, ProjectNote
 
 def home(request):
   return render(request, 'home.html')
@@ -75,12 +75,16 @@ def projects_detail(request, project_id):
     # filter team members from all users
     members_not_in_team = all_users.exclude(id__in=team_members_id)
     task_form = TaskForm()
+    project_note_form = ProjectNoteForm()
     tasks= Task.objects.filter(project_id=project_id)
+    project_notes = ProjectNote.objects.filter(project_id=project_id)
     return render(request, 'projects/detail.html', {
         'project': project,
         'task_form': task_form,
+        'project_note_form' : project_note_form,
         'members_not_in_team': members_not_in_team,
         'tasks' : tasks,
+        'project_notes' : project_notes
     })
 
 @login_required
@@ -90,6 +94,15 @@ def add_task(request, project_id):
     new_task = form.save(commit=False)
     new_task.project_id = project_id
     new_task.save()
+  return redirect('detail', project_id=project_id)
+
+@login_required
+def add_project_note(request, project_id):
+  form = ProjectNoteForm(request.POST)
+  if form.is_valid():
+    new_note = form.save(commit=False)
+    new_note.project_id = project_id
+    new_note.save()
   return redirect('detail', project_id=project_id)
 
 @login_required
