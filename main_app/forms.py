@@ -3,6 +3,11 @@ from django import forms
 from .models import Task, Project, UserProfile, ProjectNote
 
 class TaskForm(ModelForm):
+    due_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        input_formats=['%m-%d-%Y', '%m/%d/%Y', '%Y-%m-%d'],
+        required=False       
+    )
     class Meta:
         model = Task
         fields = ['name', 'description', 'due_date', 'status', 'assigned_to']
