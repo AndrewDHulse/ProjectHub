@@ -143,6 +143,24 @@ def user_login(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'user_login.html', context)
 
+# @login_required
+# def user_profile(request, user_id):
+#     error_message = ''    
+#     user_profile = UserProfile.objects.get(id=user_id)
+#     if request.method == 'POST':
+#         form = UserProfileForm(request.POST, instance=user_profile)
+#         if form.is_valid():
+#           form.save()
+#           return redirect('user_profile')
+#     else:
+#         error_message = 'Ugh Oh, something went wrong!'
+    
+#     form = UserProfileForm()
+#     context = {'form': form, 'error_message': error_message}
+#     return render(request, 'user_profile.html', context, {
+#        'user_profile': user_profile,       
+#     })
+
 @login_required
 def user_profile(request):
     error_message = ''
@@ -150,11 +168,12 @@ def user_profile(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
-          form.save()
-          return redirect('user_profile')
+            form.save()
+            return redirect('user_profile')
+        else:
+            error_message = 'Ugh Oh, something went wrong!'
     else:
-        error_message = 'Ugh Oh, something went wrong!'
+        form = UserProfileForm()
     
-    form = UserProfileForm()
     context = {'form': form, 'error_message': error_message}
     return render(request, 'user_profile.html', context)

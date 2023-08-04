@@ -3,14 +3,21 @@
   <h2>User Profile</h2>
 <!-- Display user info below -->
 <div>
-    <p> {{ user_profile }} </p>
+    <p> User: {{ request.user.username }} </p>
+    <p> Bio: {{ request.user.bio }} </p>
+    <!-- <p> Profile Pic: {{ request.user.profile_picture }} </p> -->
+    <p> First: {{ request.user.first_name }} </p>
+    <p> Last: {{ request.user.last_name }} </p>
 
 </div>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}    
-    <button type ="submit" class="btn">Save Changes</button>
-  </form>
-  <!--  <p>{{ error_message }}</p> -->
+<div>
+    <h3>Edit Profile</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}    
+        <button type ="submit" class="btn">Save Changes</button>
+    </form>
+    <!--  <p>{{ error_message }}</p> -->
+</div>
 
 {% endblock %}
