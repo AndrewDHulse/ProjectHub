@@ -5,7 +5,8 @@ from .models import Task, Project, UserProfile, ProjectNote
 class TaskForm(ModelForm):
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ['name', 'description', 'due_date', 'status', 'assigned_to']
+        widgets = {'project': forms.HiddenInput()} 
 
 class ProjectForm(forms.ModelForm):
     start_date = forms.DateField(

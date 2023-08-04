@@ -26,10 +26,6 @@
           data-bs-target="#addPhotoModal">
             Add Photo
           </button>
-          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
-          data-bs-target="#allTaskModal">
-            View Tasks
-          </button>
         </nav>
       </nav>
     </div>
@@ -113,40 +109,18 @@
             <div id="taskForm">
               <form action="{% url 'add_task' project.id %}" method="POST">
                 {% csrf_token %}
-                {{task_form.name.label_tag}}: {{task_form.name}}
+                <p>Name: </p> {{task_form.name}}
                 <br>
-                {{task_form.description.label_tag}}: {{task_form.description}}
+                <p> Description: </p> {{task_form.description}}
                 <br>
-                {{task_form.due_date.label_tag}}: {{task_form.due_date}}
+                <p> Due Date: </p> {{task_form.due_date}}
                 <br>
+                <p> Complete?: </p> {{task_form.status}}
+                <br>
+                <p> Assigned To: </p> {{task_form.assigned_to}}
                 <input type="submit" class="btn btn-primary" value="submit">
               </form>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="allTaskModal" tabindex="-1" aria-labelledby="allTaskModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="AllTaskModalLabel">All Tasks</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            {% if tasks %}
-            <ul>
-              {% for task in tasks %}
-              <li>{{ task.name }} - {{ task.description }} - Due Date: {{ task.due_date }}</li>
-              {% endfor %}
-            </ul>
-            {% else %}
-              <p>No tasks for this project.</p>
-            {% endif %}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
@@ -180,6 +154,30 @@
       </div>
     </div>
     <!-- Photo section ENDS  -->
+
+    <div class="container">      
+      <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="noteModalLabel">Add a Note</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-outline mb-4">
+                <form action="{% url 'add_project_note' project.id %}" method="POST">
+                  {% csrf_token %}
+                  {{project_note_form.note}}
+                </div>
+              </div>
+              <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <div class="col-md-9">
       <div class="card-center">
@@ -235,29 +233,23 @@
         <div class="row d-flex justify-content-center">
         <div class="col-md-8 col-lg-6">
           <div class="card shadow-0 border">
-            <div class="card-body p-4">
-
-              
+            <div class="card-body p-4" style="background-color: rgb(175, 175, 175);">
               <div class="card mb-4">
                 <div class="card-body">
                   {% if project_notes %}
                   {% for note in project_notes %}
                   <p>-{{ note.note }}</p>
+                  <hr class="hr">
                   {% endfor %}
                   {% else %}
                   <p> no notes to display</p>
                   {% endif %}
+                  <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+                  data-bs-target="#noteModal">
+                    Add a Note
+                  </button>
                 </div>
               </div>
-              
-              <div class="form-outline mb-4">
-                <form action="{% url 'add_project_note' project.id %}" method="POST">
-                  {% csrf_token %}
-                  {{project_note_form.note}}
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-              </div>
-              
             </div>
           </div>
         </div>
