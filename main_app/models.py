@@ -71,7 +71,7 @@ class Task(models.Model):
     assigned_to = models.ForeignKey(TeamMember, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return f"{self.name} is a task for {self.project} due on {self.due_date}"
-    
+
 
 class Photo(models.Model):
     url = models.CharField(max_length=200)
@@ -82,7 +82,7 @@ class Photo(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture= models.ImageField(null=True, blank=True)
+    profile_picture= models.ImageField( null=True, blank=True)
     bio = models.TextField(max_length=200)
     
     first_name = models.CharField(('first name'), max_length=150, blank=True)
@@ -91,3 +91,10 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return self.user.username
+
+class ProfilePhoto(models.Model):
+    url = models.CharField(max_length=200)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Photo for user_id: {self.user_id} @{self.url}"

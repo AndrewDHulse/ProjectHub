@@ -11,7 +11,7 @@ from .forms import TaskForm, ProjectForm, UserProfileForm
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from .models import Project, TeamMember, Photo, Task, UserProfile
+from .models import Project, TeamMember, Photo, Task, UserProfile, ProfilePhoto
 
 def home(request):
   return render(request, 'home.html')
@@ -175,5 +175,27 @@ def user_profile(request):
     else:
         form = UserProfileForm()
     
-    context = {'form': form, 'error_message': error_message}
+    context = {'form': form, 'error_message': error_message, 'user_profile': user_profile}
+    print(f"this is user profile: {type(user_profile)}")
     return render(request, 'user_profile.html', context)
+
+@login_required
+def add_user_photo(request, user_id):
+    # photo-file will be the "name" attribute on the <input type="file">
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')        
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        # just in case something goes wrong
+        try:
+            bucket = os.environ['S3_BUCKET']
+            s3.upload_fileobj(photo_file, bucket, key)
+            # build the full url string
+            url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+            # we can assign to user_id or user_profile
+            ProfilePhoto.objects.create(url=url, user_id=user_id)
+        except Exception as e:
+            print('An error occurred uploading file to S3')
+            print(e)
+    return redirect('user_profile', user_id=user_id)
+
