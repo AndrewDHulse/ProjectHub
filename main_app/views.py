@@ -89,10 +89,12 @@ def projects_detail(request, project_id):
 
 @login_required
 def add_task(request, project_id):
+  project= Project.objects.get(pk=project_id)
   form = TaskForm(request.POST)
   if form.is_valid():
     new_task = form.save(commit=False)
     new_task.project_id = project_id
+    new_task.project=project
     new_task.save()
   return redirect('detail', project_id=project_id)
 
