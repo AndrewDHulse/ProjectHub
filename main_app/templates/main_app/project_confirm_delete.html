@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1> Delete Project </h1>
 
-<form action "" method = "POST"> 
-    {% csrf_token %}
-    <input type = "submit" value="delete project" class="btn">
-    <a href="{% url 'detail' project.id %}">cancel</a>
-</form>
-
+<div class="col-md-9">
+    <div class="card-center">
+      <div class="card shadow-lg mt-3" style="width: 36rem;" id="proj-card">
+        <div class="card-body">
+          <h6 class="card-title" id="project-name">Delete {{project.name}} ?</h5>
+          <hr class= "hr hr-blurry">
+          <form action "" method = "POST"> 
+            <p>
+            Are you sure you want to delelte {{project.name}}?
+            </p>
+            {% csrf_token %}
+            <a class="btn btn-primary mb-2" href="{% url 'detail' project.id %}">cancel</a>
+            <button type="submit" class="btn btn-primary mb-2">Delete</button>
+        </form>
+        
+        </div>
+      </div>
+    </div>
+</div>
 {% endblock %}

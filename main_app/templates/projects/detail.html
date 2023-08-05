@@ -116,11 +116,11 @@
                 <p> Due Date: </p> {{task_form.due_date}}
                 <br>
                 <p> Assigned To: </p> {{task_form.assigned_to}}
-                <input type="submit" class="btn btn-primary" value="submit">
               </form>
             </div>
           </div>
           <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" value="submit">
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -179,16 +179,16 @@
 
     <div class="col-md-9">
       <div class="card-center">
-        <div class="card shadow-lg" style="width: 36rem;" id="proj-card">
+        <div class="card shadow-lg mt-3" style="width: 36rem;" id="proj-card">
           <div class="card-body">
-            <h5 class="card-title">{{ project.name }}</h5>
+            <h5 class="card-title" id="project-name">{{ project.name }}</h5>
             <hr class="hr hr-blurry" />
-            <h6 class="card-subtitle mb-2 text-muted">Project Manager: {{ project.created_by }}</h6>
-            <hr class="hr hr-blurry" />
-            <p class="card-text">{{ project.description }}</p>
+            <h6 class="card-subtitle mb-2 text-muted"><span id="manage-call">Project Manager: {{ project.created_by }} </span></h6>
             <div class="card-footer text-muted">
               {{ project.start_date }} -- {{ project.end_date }}
             </div>
+            <hr class="hr hr-blurry" />
+            <p class="card-text">{{ project.description }}</p>
             <hr class="hr hr-blurry" />
             <!--tasks starts-->
             <div id="tasks">
@@ -206,6 +206,7 @@
     <!--end tasks-->
       <hr class="hr hr-blurry" />
       <!-- photo carousel -->
+      {% if project.photo %}
       <div id="photoCarousel" class="carousel slide">
         <div class="carousel-inner">
           {% for photo in project.photo_set.all %}
@@ -224,7 +225,9 @@
       </button>
       </div>
       <!--end carousel -->
-      <hr class="hr hr-blurry" />
+      <hr class="hr hr-blurry">
+      {% else %}
+      {% endif %}
       <div id="notes">
 
 
