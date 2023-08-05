@@ -29,10 +29,19 @@
   transform: translateY(-50%);
 }
 
-.btn-primary{
-  background-color: gray;
+.navbar-brand{
+font-family: 'Passion One', cursive;
+font-size: 4rem;
+  
 }
 
+.btn-primary{
+  background-color: gray;
+  border-color: black;
+  color: black;
+  font-family: 'Rubik Mono One', sans-serif;
+  font-size: 1rem;
+}
 
 .carousel-control-prev,
 .carousel-control-next {
@@ -44,12 +53,19 @@
   margin: 5px;
 }
 
-
-
-
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
   background-color: #ccc; 
 
 }
 
+#project-name{
+  font-family: 'Anton', sans-serif;
+  font-size: 2.5rem;
+}
+
+#manage-call{
+  font-family: 'Passion One', cursive;
+  font-size: 1.75rem;
+  color: black;
+}

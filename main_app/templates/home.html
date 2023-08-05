@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>HOME PAGE</h1>
+<div class="col-md-9">
+    <div class="card-center">
+      <div class="card shadow-lg mt-3" style="width: 36rem;" id="proj-card">
+        <div class="card-body">
+          <h6 class="card-title" id="project-name">Welcome to ProjectHub</h5>
+          <hr class= "hr hr-blurry">
+            <p>
+                Learn <a class="btn btn-primary mb-2"  href="{% url 'about' %}"> about us <a/> or <a class="btn btn-primary mb-2"  href="{% url 'projects_create' %}"> get started</a> with a new project.
+            </p>
+            <br>
+            <br>
+            <p>New User? 
+                <a class="btn btn-primary mb-2" href="{% url 'signup' %}">sign up</a>
+            now!
+            </p>
+        </div>
+      </div>
+    </div>
+</div>
 
 {% endblock %}

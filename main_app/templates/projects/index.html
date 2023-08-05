@@ -1,22 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{%if projects.count%}
-  <h1>Project List</h1>
-    {% for project in projects %}
+<div class="col-md-9">
+  <div class="card-center">
+    <div class="card shadow-lg mt-3" style="width: 36rem;" id="proj-card">
+      <div class="card-body">
+        <h6 class="card-title" id="project-name">Project List</h5>
+          {%if projects.count%}
+          {% for project in projects %}
+          <hr class= "hr hr-blurry">
+        <h5 class="card-title"><a href= {% url 'detail' project.id %}>{{project.name}}</a></h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{project.created_by}}</h6>
+        {% endfor %}
+        {%else%}
+        <p>
+          <hr class="hr hr-blurry">
+          Looks like you have no projects! 
+          <br>
+            <a class="btn btn-primary mt-3"  href="{% url 'projects_create' %}"> Create a new project</a>
+        </p>
+    {%endif%}
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="card mb-2" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title"><a href= {% url 'detail' project.id %}>{{project.name}}</a></h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{project.created_by}}</h6>
-            </div>
-          </div>
-    {% endfor %}
-  {%else%}
-    <p>
-      Looks like you have no projects! 
-      <br>
-      <a href="{% url 'projects_create' %}">Create a project</a> to begin!
-    </p>
-{%endif%}
 {% endblock %}
