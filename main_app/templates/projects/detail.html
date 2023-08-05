@@ -218,9 +218,9 @@
       {% endif %}
     </div>
     <!--end tasks-->
-      <hr class="hr hr-blurry" />
-      <!-- photo carousel -->
-      {% if project.photo %}
+    <!-- photo carousel -->
+    {% if project.photo_set.all %}
+    <hr class="hr hr-blurry" />
       <div id="photoCarousel" class="carousel slide">
         <div class="carousel-inner">
           {% for photo in project.photo_set.all %}
@@ -241,6 +241,7 @@
       <!--end carousel -->
       <hr class="hr hr-blurry">
       {% else %}
+      <hr class="hr hr-blurry">
       {% endif %}
       <div id="notes">
 
