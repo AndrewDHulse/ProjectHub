@@ -83,13 +83,34 @@ def projects_detail(request, project_id):
 @login_required
 def add_task(request, project_id):
   project= Project.objects.get(pk=project_id)
-  form = TaskForm(request.POST)
-  if form.is_valid():
-    new_task = form.save(commit=False)
-    new_task.project_id = project_id
-    new_task.project=project
-    new_task.save()
-  return redirect('detail', project_id=project_id)
+  if request.method == 'POST':
+    form = TaskForm(request.POST)
+    if form.is_valid():
+      new_task = form.save(commit=False)
+      new_task.project_id = project_id
+      new_task.project=project
+      new_task.save()
+    return redirect('detail', project_id=project_id)
+  else:
+    form = TaskForm()
+  tasks = Task.objects.filter(project=project)
+
+  context = {
+    'project' : project,
+    'tasks' : tasks,
+    'task_form' : form,
+  }
+  return render(request, 'detail.html', context)
+
+@login_required
+def update_task(request, task_id):
+  if request.method == 'POST':
+    task = Task.objects.get(pk=task_id)
+    new_status = request.POST.get('status', False) == 'on' 
+    task.status = new_status
+    task.save()
+
+  return redirect('detail', project_id=task.project_id)
 
 @login_required
 def add_project_note(request, project_id):

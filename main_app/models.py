@@ -83,6 +83,10 @@ class Task(models.Model):
             self.project_id = project_id
         super (Task, self).save(*args, **kwargs)
 
+    @property
+    def status_display(self):
+        return "Complete" if self.status else "Incomplete"
+
 class Photo(models.Model):
     url = models.CharField(max_length=200)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

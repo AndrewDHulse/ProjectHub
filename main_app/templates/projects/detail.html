@@ -116,11 +116,11 @@
                 <p> Due Date: </p> {{task_form.due_date}}
                 <br>
                 <p> Assigned To: </p> {{task_form.assigned_to}}
-              </form>
+              </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <input type="submit" class="btn btn-primary" value="submit">
+            <div class="modal-footer">
+              <input type="submit" class="btn btn-primary" value="submit">
+            </form>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
@@ -196,7 +196,21 @@
       {% if tasks %}
       <ul>
         {% for task in tasks %}
-        <li>{{ task.name }} - {{ task.description }} - Due Date: {{ task.due_date }}</li>
+        <li>{{ task.name }} </li>
+          <ul>
+            <li> Assigned to- {{task.assigned_to}}</li>
+              <ul>
+                <form id="form-{{ task.id }}" action="{% url 'update_task' task.id %}" method="POST"> 
+                {% csrf_token %}
+                <li>
+                  <input type="checkbox" name="status" {% if task.status %}checked{% endif %} onchange="updateTask({{ task.id }})">
+                  {{task.status_display}}
+                </form>
+                </li>
+              <li> {{ task.description }} </li>
+              <li> Due Date: {{ task.due_date }}</li>
+              </ul>
+          </ul>
         {% endfor %}
       </ul>
       {% else %}
@@ -271,4 +285,11 @@
 
 </div>
 
+
+<script>
+  function updateTask(taskId) {
+    const formElement = document.getElementById(`form-${taskId}`);
+    formElement.submit();
+  }
+  </script>
 {% endblock %}
