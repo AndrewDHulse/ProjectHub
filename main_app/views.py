@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import TaskForm, ProjectForm, UserProfileForm, ProjectNoteForm
 from django.urls import reverse
+from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from .models import Project, TeamMember, Photo, Task, UserProfile, ProfilePhoto, ProjectNote
@@ -25,14 +26,6 @@ def projects_index(request):
   return render(request, 'projects/index.html', {
     'projects': projects
   })
-
-# class ProjectCreate(LoginRequiredMixin, CreateView):
-#   model = Project
-#   fields = ['name', 'description', 'start_date', 'end_date']
-
-#   def form_valid(self, form):
-#     form.instance.created_by = self.request.user
-#     return super().form_valid(form)
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
@@ -101,6 +94,7 @@ def add_task(request, project_id):
 @login_required
 def add_project_note(request, project_id):
   form = ProjectNoteForm(request.POST)
+  print(f"before form is valid: {form}")
   if form.is_valid():
     new_note = form.save(commit=False)
     new_note.project_id = project_id
@@ -158,41 +152,50 @@ def user_login(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'user_login.html', context)
 
+
+class UserProfileView(LoginRequiredMixin, View):
+    template_name = 'user_profile.html'
+
+    def get(self, request):
+        user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+        form = UserProfileForm(instance=user_profile)
+        print(f" get for user_profile,(id): {user_profile}, ({user_profile.id}), req.user.id: {request.user.id}")
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            print(f"form post is valid for user_profile: {user_profile}")
+            form.save()
+            print(f"form post SAVED for user_profile: {user_profile}")
+            return redirect('user_profile')
+        return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
+
+class UserProfileUpdate(LoginRequiredMixin, UpdateView):
+  model = UserProfile
+  fields = '__all__'
+
+# OLD solution.. Couldn't get it to work
 # @login_required
 # def user_profile(request, user_id):
-#     error_message = ''    
-#     user_profile = UserProfile.objects.get(id=user_id)
+#     error_message = ''
+#     user_profile = UserProfile.objects.get(user=request.user)
 #     if request.method == 'POST':
-#         form = UserProfileForm(request.POST, instance=user_profile)
+#         form = UserProfileForm(request.POST)
 #         if form.is_valid():
-#           form.save()
-#           return redirect('user_profile')
+#             print(f"it made it valid form, form: ")
+#             form.save()
+#             return redirect('user_profile')
+#         else:
+#             print(f"it made it to else, form: ")
+#             error_message = 'Ugh Oh, something went wrong!'
 #     else:
-#         error_message = 'Ugh Oh, something went wrong!'
+#         form = UserProfileForm()
     
-#     form = UserProfileForm()
-#     context = {'form': form, 'error_message': error_message}
-#     return render(request, 'user_profile.html', context, {
-#        'user_profile': user_profile,       
-#     })
-
-@login_required
-def user_profile(request):
-    error_message = ''
-    user_profile = UserProfile.objects.get_or_create(user=request.user)[0]
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile')
-        else:
-            error_message = 'Ugh Oh, something went wrong!'
-    else:
-        form = UserProfileForm()
-    
-    context = {'form': form, 'error_message': error_message, 'user_profile': user_profile}
-    print(f"this is user profile: {user_profile}")
-    return render(request, 'user_profile.html', context)
+#     context = {'form': form, 'error_message': error_message, 'user_profile': user_profile}
+#     print(f"this is user profile: {user_profile}")
+#     return render(request, 'user_profile.html', context)
 
 @login_required
 def add_user_photo(request, user_id):

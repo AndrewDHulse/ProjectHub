@@ -28,10 +28,10 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = ['name', 'description', 'start_date', 'end_date']
 
-class UserProfileForm(forms.ModelForm):
+class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['first_name', 'last_name', 'bio', 'email']
 
 class ProjectNoteForm(forms.ModelForm):
     class Meta:
