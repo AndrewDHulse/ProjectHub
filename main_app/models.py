@@ -24,10 +24,8 @@ class Project(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=250)
     start_date = models.DateField()
-    end_date = models.DateField() 
+    end_date = models.DateField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    # use related_name= to avoid the conflict error's we've been given
-    # use through model, see bellow
     team_members = models.ManyToManyField(User, through='TeamMember', related_name='projects')
 
     def __str__(self):
@@ -41,7 +39,7 @@ class Project(models.Model):
             super(Project, self).save(*args, **kwargs)
             TeamMember.objects.create(project=self, user=self.created_by)
         else:
-            super(Project, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
 class ProjectNote(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

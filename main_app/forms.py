@@ -28,6 +28,11 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = ['name', 'description', 'start_date', 'end_date']
 
+class ProjectUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'start_date', 'end_date']
+
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile

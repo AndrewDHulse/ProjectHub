@@ -8,8 +8,11 @@
       <nav id="navbar-side" class="navbar navbar-light bg-light flex-column align-items-stretch p-3 shadow-lg">
         <div class="navbar-brand"> Tools </div>
         <nav class="nav nav-pills flex-column">
-          <a class="btn btn-primary mb-2 " href="{% url 'projects_update' project.id %}">Update </a>
-          <a class="btn btn-primary mb-2" href="{% url 'projects_delete' project.id %}">Delete</a>
+          <a class="btn btn-primary mb-2 " href="{% url 'projects_delete' project.id %}">Delete </a>
+          <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+          data-bs-target="#updateModal">
+            Update
+          </button>
           <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
           data-bs-target="#memberModal">
             View or remove members
@@ -57,6 +60,27 @@
             {% else %}
             <p>No team members assigned to this project.</p>
             {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="memberModalLabel">Update Project</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="" action="{% url 'detail' project_id=project.id %}" method="POST">
+              {% csrf_token %}
+              {{ project_update_form.as_p }}
+              <button type="submit" class="btn btn-primary">Update Project</button>
+          </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
