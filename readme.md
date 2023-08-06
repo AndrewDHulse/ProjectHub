@@ -6,7 +6,7 @@ ProjectHub is a site built in a collaborative effort between Andrew Hulse and Al
 - Create and update tasks
 - Upload photos related to the tasks
 
-<img alt="Screenshot of project detail page" src=/images/detail-screenshot.png>
+<img alt="Screenshot of project detail page" src=/static/images/detail-screenshot.png>
 
 ## Getting Started
 
