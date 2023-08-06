@@ -7,12 +7,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import TaskForm, ProjectForm, UserProfileForm, ProjectNoteForm
-from django.urls import reverse
+from .forms import TaskForm, ProjectForm, UserProfileForm, ProjectNoteForm, ProjectUpdateForm
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from .models import Project, TeamMember, Photo, Task, UserProfile, ProfilePhoto, ProjectNote
+from django.utils.dateparse import parse_date
 
 def home(request):
   return render(request, 'home.html')
@@ -40,10 +41,20 @@ class ProjectDelete(LoginRequiredMixin, DeleteView):
   model = Project
   success_url = '/projects'
 
-class ProjectUpdate(LoginRequiredMixin, UpdateView):
-  model = Project
-  fields = '__all__'
+@login_required
+def projects_update(request, project_id):
+    project = Project.objects.get(id=project_id)
+    
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('detail', project_id=project_id)
+    else:
+        form = ProjectForm(instance=project)
 
+    return render(request, 'projects/update_project.html', {'form': form})
+    
 def signup(request):
   error_message = ''
   if request.method == 'POST':
@@ -61,6 +72,14 @@ def signup(request):
 @login_required
 def projects_detail(request, project_id):
     project = Project.objects.get(id=project_id)
+    if request.method == 'POST':
+      project_update_form = ProjectUpdateForm(request.POST, instance=project)
+      if project_update_form.is_valid():
+        project_update_form.save()
+        return redirect('detail', project_id=project_id)
+
+    else:
+        project_update_form = ProjectForm(instance=project)
     #grabbed users here
     all_users = User.objects.all()
     # check team members here
@@ -77,7 +96,8 @@ def projects_detail(request, project_id):
         'project_note_form' : project_note_form,
         'members_not_in_team': members_not_in_team,
         'tasks' : tasks,
-        'project_notes' : project_notes
+        'project_notes' : project_notes,
+        'project_update_form' : project_update_form
     })
 
 @login_required
