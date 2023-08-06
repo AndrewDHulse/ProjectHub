@@ -193,48 +193,37 @@ class UserProfileView(LoginRequiredMixin, View):
             return redirect('user_profile')
         return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
 
-class UserProfileUpdate(LoginRequiredMixin, UpdateView):
-  model = UserProfile
-  fields = '__all__'
-
-# OLD solution.. Couldn't get it to work
-# @login_required
-# def user_profile(request, user_id):
-#     error_message = ''
-#     user_profile = UserProfile.objects.get(user=request.user)
-#     if request.method == 'POST':
-#         form = UserProfileForm(request.POST)
-#         if form.is_valid():
-#             print(f"it made it valid form, form: ")
-#             form.save()
-#             return redirect('user_profile')
-#         else:
-#             print(f"it made it to else, form: ")
-#             error_message = 'Ugh Oh, something went wrong!'
-#     else:
-#         form = UserProfileForm()
-    
-#     context = {'form': form, 'error_message': error_message, 'user_profile': user_profile}
-#     print(f"this is user profile: {user_profile}")
-#     return render(request, 'user_profile.html', context)
 
 @login_required
-def add_user_photo(request, user_id):
+def add_user_photo(request, user_profile_id):
     # photo-file will be the "name" attribute on the <input type="file">
     photo_file = request.FILES.get('photo-file', None)
+    print(f"I have reached the add_user_photo URL")
     if photo_file:
         s3 = boto3.client('s3')        
-        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        key = uuid.uuid4().hex[:6] + photo_file.name[:photo_file.name.rfind('.')]
         # just in case something goes wrong
         try:
             bucket = os.environ['S3_BUCKET']
             s3.upload_fileobj(photo_file, bucket, key)
             # build the full url string
             url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
-            # we can assign to user_id or user_profile
-            ProfilePhoto.objects.create(url=url, user_id=user_id)
+            # we can assign profilephoto to req.user.userprofile
+            # since that's the object w One:One relationship           
+            profilephoto = request.user.userprofile.profilephoto
+            if profilephoto:
+              if profilephoto.key:
+                s3.delete_object(Bucket=bucket, Key=profilephoto.key)
+                print(f"the old user_profilephoto was deleted") 
+              # Now update the key, url for profilephoto and save to db             
+              profilephoto.key = key
+              profilephoto.url = url
+              profilephoto.save()
+            else:
+              ProfilePhoto.objects.create(url=url, user_profile_id=user_profile_id, key=key)
+              print('We made it to try part')
         except Exception as e:
             print('An error occurred uploading file to S3')
             print(e)
-    return redirect('user_profile', user_id=user_id)
+    return redirect('user_profile')
 

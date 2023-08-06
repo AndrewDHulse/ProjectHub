@@ -108,8 +108,9 @@ class UserProfile(models.Model):
 
 class ProfilePhoto(models.Model):
     url = models.CharField(max_length=200)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    key = models.CharField(max_length=200, default='')
 
     def __str__(self):
-        return f"Photo for user_id: {self.user_id} @{self.url}"
+        return f"Photo for user_id: {self.user_profile_id} @{self.url}"
 

@@ -69,3 +69,14 @@ font-size: 4rem;
   font-size: 1.75rem;
   color: black;
 }
+#file-input {
+  max-width: 100%;
+}
+#user-card {
+  width: 350px;
+  
+}
+#default-img {
+  width: 250px;
+  object-fit: cover;
+}
