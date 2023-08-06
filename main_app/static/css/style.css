@@ -73,6 +73,10 @@ font-size: 4rem;
   max-width: 100%;
 }
 #user-card {
-  width: 500px;
-  min-width: 300px;
+  width: 350px;
+  
+}
+#default-img {
+  width: 250px;
+  object-fit: cover;
 }

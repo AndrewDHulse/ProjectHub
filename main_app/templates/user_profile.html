@@ -9,16 +9,16 @@
                     <h2>Welcome <span>{{ request.user.username }}</span></h2>
                     <!-- Display user info below -->
                     <div class="mb-4">
-                        {% if user_profile.profilephoto_set.all %}
-                        <img src="{{ profilephoto.url }}" alt="Profile Picture" class="img-fluid">
+                        {% if user_profile.profilephoto %}
+                        <img src="{{ user_profile.profilephoto.url }}" alt="Profile Picture" class="img-fluid">
                         {% else %}                        
-                        <img src="{% static 'images/defaults/user1.jpg' %}" alt="Default Pic" class="img-fluid">
+                        <img src="{% static 'images/defaults/user1.jpg' %}" alt="Default Pic" class="img-fluid" id="default-img">
                         {% endif %}
                         <hr class="hr hr-blurry">
                         <p><strong>Name:</strong> {{ user_profile.first_name }} {{ user_profile.last_name }}</p>
                         <p><strong>Email:</strong> {{ user_profile.email }}</p>
                         <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
-                        <form action="{% url 'add_user_photo' user.id %}" enctype="multipart/form-data" method="POST">
+                        <form action="{% url 'add_user_photo' user_profile.id %}" enctype="multipart/form-data" method="POST">
                             {% csrf_token %}
                             <input type="file" name="photo-file" class="btn btn-primary" id="file-input">
                             <br>
