@@ -1,57 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 <div class="container my-4">
     <div class="row">
-        <div class="col-md-6">
-            <h2><span>{{ request.user.username }}</span>'s Profile</h2>
-            <!-- Display user info below -->
-            <div class="mb-4">
-                {% if user_profile.profilephoto_set.all %}
-                <img src="{{ profilephoto.url }}" alt="Profile Picture">
-                {% else %}
-                <div>No Profile Picture</div>
-                {% endif %}
-                <p><strong>Name:</strong> {{ user_profile.first_name }} {{ user_profile.last_name }}</p>
-                <p><strong>Email:</strong> {{ user_profile.email }}</p>
-                <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
-                <form action="{% url 'add_user_photo' user.id %}" enctype="multipart/form-data" method="POST">
-                    {% csrf_token %}
-                    <input type="file" name="photo-file">
-                    <br>
-                    <button type="submit" class="btn">Upload User Photo</button>
-                </form>            
-            </div>        
-        </div>
-        <!-- Beginning of Edit Profile  -->
-        <div class="col-md-6">
-            <h3>
-                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#editProfileSection" aria-expanded="false" aria-controls="editProfileSection">
-                Edit Profile
-                </button>            
-            </h3>
-            <div class="collapse" id="editProfileSection">
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
-                        {{ form.first_name }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
-                        {{ form.last_name }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-                        {{ form.email }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
-                        {{ form.bio }}
-                    </div>                
-                    <button type="submit" class="btn btn-primary float-end">Save Changes</button>
-                </form>
-            </div>        
-        </div>
+        <div class="col-md">
+            <div class="card-center" id="user-card">
+                <div class="card-body">
+                    <h2>Welcome <span>{{ request.user.username }}</span></h2>
+                    <!-- Display user info below -->
+                    <div class="mb-4">
+                        {% if user_profile.profilephoto_set.all %}
+                        <img src="{{ profilephoto.url }}" alt="Profile Picture" class="img-fluid">
+                        {% else %}                        
+                        <img src="{% static 'images/defaults/user1.jpg' %}" alt="Default Pic" class="img-fluid">
+                        {% endif %}
+                        <hr class="hr hr-blurry">
+                        <p><strong>Name:</strong> {{ user_profile.first_name }} {{ user_profile.last_name }}</p>
+                        <p><strong>Email:</strong> {{ user_profile.email }}</p>
+                        <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+                        <form action="{% url 'add_user_photo' user.id %}" enctype="multipart/form-data" method="POST">
+                            {% csrf_token %}
+                            <input type="file" name="photo-file" class="btn btn-primary" id="file-input">
+                            <br>
+                            <button type="submit" class="btn btn-primary mt-3">Update</button>
+                        </form>            
+                    </div>        
+                </div>
+                <div class="card-footer">
+                    <!-- Beginning of Edit Profile  -->
+                    <h3>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editProfileSection" aria-expanded="false" aria-controls="editProfileSection">
+                        Edit Profile
+                        </button>            
+                    </h3>
+                    <div class="collapse" id="editProfileSection">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                                {{ form.bio }}
+                            </div>                
+                            <button type="submit" class="btn btn-primary float-end">Save Changes</button>
+                        </form>
+                    </div> 
+                    <!-- End Edit Profile Section  --> 
+                </div>
+            </div>
+        </div>        
     </div>
 </div>
 {% endblock %}

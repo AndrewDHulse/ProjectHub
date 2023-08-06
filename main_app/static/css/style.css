@@ -69,3 +69,10 @@ font-size: 4rem;
   font-size: 1.75rem;
   color: black;
 }
+#file-input {
+  max-width: 100%;
+}
+#user-card {
+  width: 500px;
+  min-width: 300px;
+}
