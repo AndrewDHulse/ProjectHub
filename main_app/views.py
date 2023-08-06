@@ -181,7 +181,7 @@ class UserProfileView(LoginRequiredMixin, View):
         user_profile, created = UserProfile.objects.get_or_create(user=request.user)
         form = UserProfileForm(instance=user_profile)
         print(f" get for user_profile,(id): {user_profile}, ({user_profile.id}), req.user.id: {request.user.id}")
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'user_profile': user_profile})
 
     def post(self, request):
         user_profile, created = UserProfile.objects.get_or_create(user=request.user)
