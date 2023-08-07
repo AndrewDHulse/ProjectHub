@@ -7,19 +7,6 @@ from django.core import validators
 
 # Create your models here.
 
-
-
-
-# class CustomUser(AbstractUser):
-#     #fix profile_picture later
-#     profile_picture= models.ImageField()
-    
-
-#     def __str__(self):
-#         return self.user_name
-
-
-
 class Project(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=250)
@@ -47,16 +34,13 @@ class ProjectNote(models.Model):
 
     def __str__(self):
         return f"{self.note} is a note for {self.project}"
-    
-#we did it!
 
-
-#Define after project.
-#we essentailly want team member to serve as an intermediary between users
+# Define after project.
+# we essentailly want team member to serve as an intermediary between users
 # and projects. we needed a second way to access it.
-# by using through up above we are effictively able to use users twice
+# by using 'through' up above we are effictively able to use users twice
 class TeamMember(models.Model):
-    #use related_name=to avoid the errors we've been given
+    #use related_name=to avoid the errors
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='team_member')
     project= models.ForeignKey(Project, on_delete=models.CASCADE, default=None)
 
