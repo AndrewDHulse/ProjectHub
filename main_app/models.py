@@ -105,7 +105,7 @@ class UserProfile(models.Model):
         return self.user.username
 
 class ProfilePhoto(models.Model):
-    url = models.CharField(max_length=200)
+    url = models.CharField(max_length=200, default='main_app/static/images/user1.jpg')
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     key = models.CharField(max_length=200, default='')
 

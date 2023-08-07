@@ -45,7 +45,13 @@
                             <li><a class="dropdown-item" href="{% url 'projects_create' %}">Create</a></li>
                           </ul>
                           <li class="nav-item ml-auto">
-                            <a class="nav-link" href="{% url 'user_profile'  %}">Profile</a>
+                            <a class="nav-link" href="{% url 'user_profile'  %}">
+                              {% if request.user.userprofile.profilephoto.count %}
+                              <img src="{{ request.user.userprofile.profilephoto.url }}" alt="profile" class="rounded-circle" style="border:gray solid 1px" width="40" height="40">
+                              {% else %}
+                              <img src="{% static 'images/defaults/user1.jpg' %}" alt="profile" class="rounded-circle" style="border:gray solid 1px" width="40" height="40">
+                              {% endif %}
+                            </a>
                           </li>
                           <li class="nav-item ml-auto">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
