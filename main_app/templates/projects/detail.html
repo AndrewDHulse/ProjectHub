@@ -208,8 +208,8 @@
             <h5 class="card-title" id="project-name">{{ project.name }}</h5>
             <hr class="hr hr-blurry" />
             <h6 class="card-subtitle mb-2 text-muted"><span id="manage-call">Project Manager: {{ project.created_by }} </span></h6>
-            <div class="card-footer text-muted">
-              {{ project.start_date }} -- {{ project.end_date }}
+            <div class="card-footer">
+              Start: {{ project.start_date }} <br> End: {{ project.end_date }}
             </div>
             <hr class="hr hr-blurry" />
             <p class="card-text">{{ project.description }}</p>
