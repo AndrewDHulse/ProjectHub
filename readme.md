@@ -182,4 +182,5 @@ This function allows users to update tasks from the project details page simply 
 - Team member direct messaging
 - Voting out project manager and vote in their replacement
 - Option to attach a username to the notes
-- render all team members on detail page
+- Render all team members' profile pictures on detail page
+- Implement responsive design for mobile.
