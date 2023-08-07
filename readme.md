@@ -1,6 +1,6 @@
 # ProjectHub
 
-ProjectHub is a site built in a collaborative effort between Andrew Hulse and Alex Villalobos. The game is project management. It is first and foremost a productivity tool with teams in mind. Users aree able to easily:
+ProjectHub is a site built in a collaborative effort between Andrew Hulse and Alex Villalobos. The game is project management. It is first and foremost, a productivity tool with teams in mind. Users are able to easily:
 - Create a project 
 - Add and remove team members
 - Create and update tasks
@@ -16,11 +16,11 @@ To begin, the user may click the sign-up button found in the top bar. They will 
  
 ## Features 
 
-- User profile page, to be updated and expanded at a later date
 - Index of projects both created by the user, and projects of which they are a member
 - Ability to create and delete projects
 - Ability to add notes
 - Ability to update tasks
+- Ability to edit user profile
 
 ## Technologies Used
 
@@ -28,7 +28,7 @@ To begin, the user may click the sign-up button found in the top bar. They will 
 <!--bootstrap-->
 <img alt="Bootstrap Badge" src="https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white">
 
-The implimentation of Bootstrap allows for a cleaner look to project pages. As an example, the task form would otherwise take up too much whitespace for a clean look, but by relagating it to be displayed as a single button:
+The implementation of Bootstrap allows for a cleaner look to project pages. As an example, the task form would otherwise take up too much whitespace for a clean look, but by relegating it to be displayed as a single button:
 ```
           <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
           data-bs-target="#addTaskModal">
@@ -128,7 +128,7 @@ class Project(models.Model):
         else:
             super(Project, self).save(*args, **kwargs)
 ```
-This illustrates the simplicity of overriding the default functionality of django's default behaviors, the ease in creating differing relationships, be it many to many, or many to one. Additionally, the use of a through model of demonstrates an even more powerful method in which django can handle relationships and data queries 
+This illustrates the simplicity of overriding the default functionality of django's default behaviors, the ease in creating differing relationships, be it many to many, or many to one. Additionally, the use of a through model of demonstrates an even more powerful method in which django can handle relationships and data queries.
 
 ```
 class TeamMember(models.Model):
@@ -174,9 +174,9 @@ This function allows users to update tasks from the project details page simply 
 
 ## Icebox Features
 
-- Expanded Profiles
 - Different roles and permissions between team members and project managers
 - Multiple forms, such as spreadsheets and graphs created in-site for projects
 - Multiple filetypes allowed for upload
 - Ability to sort the index
 - Ability to make projects public or private
+- Team member direct messaging
