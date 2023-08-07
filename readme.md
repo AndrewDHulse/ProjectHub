@@ -181,3 +181,5 @@ This function allows users to update tasks from the project details page simply 
 - Ability to make projects public or private
 - Team member direct messaging
 - Voting out project manager and vote in their replacement
+- Option to attach a username to the notes
+- render all team members on detail page
